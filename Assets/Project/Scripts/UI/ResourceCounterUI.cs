@@ -3,17 +3,17 @@ using TMPro;
 
 public class ResourceCounterUI : MonoBehaviour
 {
-    [SerializeField] private Base _base;
+    [SerializeField] private ResourceCounter _resourceCounter;
     [SerializeField] private TextMeshProUGUI _countText;
 
     private void OnEnable()
     {
-        _base.OnResourceCountChanged += UpdateText;
+        _resourceCounter.OnResourceCountChanged += UpdateText;
     }
 
     private void OnDisable()
     {
-        _base.OnResourceCountChanged -= UpdateText;
+        _resourceCounter.OnResourceCountChanged -= UpdateText;
     }
 
     private void UpdateText(int newCount)

@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 897943256586339883}
   - component: {fileID: 8450980965640893530}
   - component: {fileID: 126859837770679380}
+  - component: {fileID: 5412997999575130189}
   m_Layer: 0
   m_Name: SlimePBR
   m_TagString: Untagged
@@ -195,8 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22660b4c5a0365044b8d3d36c786827e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _carryOffset: {x: 0, y: 1, z: 0}
-  _dropHeight: 0.8
 --- !u!114 &126859837770679380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,6 +210,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 3
   _arrivalThreshold: 0.1
+--- !u!114 &5412997999575130189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836494239252677785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8aa96f15b3f66d4b93bb1685c435abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carryHeight: 1
+  _dropHeight: 0.8
+  _zoneMargin: 0.2
 --- !u!1 &1236626472995662691
 GameObject:
   m_ObjectHideFlags: 0
