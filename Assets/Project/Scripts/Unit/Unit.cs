@@ -5,12 +5,26 @@ public class Unit : MonoBehaviour
 {
     private ResourceCarrier _carrier;
 
-    public event Action<Unit> OnResourceDelivered;
+    public event Action<Unit> ResourceDelivered;
 
     private void Awake()
     {
         _carrier = GetComponent<ResourceCarrier>();
-        _carrier.OnDelivered += () => OnResourceDelivered?.Invoke(this);
+    }
+
+    private void OnEnable()
+    {
+        _carrier.Delivered += HandleCarrierDelivered;
+    }
+
+    private void OnDisable()
+    {
+        _carrier.Delivered += HandleCarrierDelivered;
+    }
+
+    private void HandleCarrierDelivered()
+    {
+        ResourceDelivered?.Invoke(this);
     }
 
     public void SetTarget(Resource resource, SphereCollider deliveryZone)

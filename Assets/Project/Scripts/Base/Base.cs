@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Base : MonoBehaviour
@@ -19,12 +17,12 @@ public class Base : MonoBehaviour
 
     private void OnEnable()
     {
-        _input.OnScanRequested += HandleScan;
+        _input.ScanRequested += HandleScan;
     }
 
     private void OnDisable()
     {
-        _input.OnScanRequested -= HandleScan;
+        _input.ScanRequested -= HandleScan;
     }
 
     private void HandleScan()

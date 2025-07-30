@@ -12,17 +12,37 @@ public class ResourcePool : MonoBehaviour
     private void Awake()
     {
         _pool = new ObjectPool<Resource>(
-            createFunc: () => Instantiate(_resourcePrefab),
-            actionOnGet: resource => resource.gameObject.SetActive(true),
-            actionOnRelease: resource => resource.gameObject.SetActive(false),
+            createFunc:      CreateResourceInstance,
+            actionOnGet:     OnGetResource,
+            actionOnRelease: OnReleaseResource,
             actionOnDestroy: resource => Destroy(resource.gameObject),
             collectionCheck: true,
             defaultCapacity: _defaultCapacity,
-            maxSize: _maxSize
+            maxSize:         _maxSize
         );
     }
 
-    public Resource Get() => _pool.Get();
+    private Resource CreateResourceInstance()
+    {
+        return Instantiate(_resourcePrefab);
+    }
 
-    public void Release(Resource resource) => _pool.Release(resource);
+    private void OnGetResource(Resource resourceInstance)
+    {
+        resourceInstance.Initialize();
+        resourceInstance.ReturnToPool += HandleResourceReturnRequested;
+    }
+
+    private void OnReleaseResource(Resource resourceInstance)
+    {
+        resourceInstance.ReturnToPool -= HandleResourceReturnRequested;
+        resourceInstance.gameObject.SetActive(false);
+    }
+
+    private void HandleResourceReturnRequested(Resource resourceInstance)
+    {
+        _pool.Release(resourceInstance);
+    }
+
+    public Resource Get() => _pool.Get();
 }

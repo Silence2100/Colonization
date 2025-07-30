@@ -1,15 +1,15 @@
+using System;
 using UnityEngine;
 
 public class Resource : MonoBehaviour
 {
-    private ResourcePool _owningPool;
-
     public bool IsCollected { get; private set; } = false;
     public bool IsReserved { get; private set; } = false;
 
-    public void Initialize(ResourcePool pool)
+    public event Action<Resource> ReturnToPool;
+
+    public void Initialize()
     {
-        _owningPool = pool;
         IsCollected = false;
         IsReserved = false;
         gameObject.SetActive(true);
@@ -43,5 +43,10 @@ public class Resource : MonoBehaviour
         }
 
         IsCollected = true;
+    }
+
+    public void ReturnPool()
+    {
+        ReturnToPool?.Invoke(this);
     }
 }

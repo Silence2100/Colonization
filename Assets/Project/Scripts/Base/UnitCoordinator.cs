@@ -10,7 +10,7 @@ public class UnitCoordinator : MonoBehaviour
     private readonly List<Unit> _freeUnits = new List<Unit>();
     private readonly List<Unit> _allUnits = new List<Unit>();
 
-    public event Action<Unit> OnUnitFreed;
+    public event Action<Unit> UnitFreed;
 
     public IReadOnlyList<Unit> FreeUnits => _freeUnits;
 
@@ -19,7 +19,7 @@ public class UnitCoordinator : MonoBehaviour
         for (int i = 0; i < _initialUnitCount; i++)
         {
             Unit unit = _unitSpawner.SpawnOne();
-            unit.OnResourceDelivered += HandleUnitDelivered;
+            unit.ResourceDelivered += HandleUnitDelivered;
 
             _freeUnits.Add(unit);
             _allUnits.Add(unit);
@@ -30,14 +30,14 @@ public class UnitCoordinator : MonoBehaviour
     {
         foreach (Unit unit in _allUnits)
         {
-            unit.OnResourceDelivered -= HandleUnitDelivered;
+            unit.ResourceDelivered -= HandleUnitDelivered;
         }
     }
 
     private void HandleUnitDelivered(Unit unit)
     {
         _freeUnits.Add(unit);
-        OnUnitFreed?.Invoke(unit);
+        UnitFreed?.Invoke(unit);
     }
 
     public void AssignUnits(List<Resource> resources, SphereCollider deliveryZone)

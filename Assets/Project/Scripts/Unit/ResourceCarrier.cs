@@ -11,7 +11,7 @@ public class ResourceCarrier : MonoBehaviour
     private SphereCollider _deliveryZone;
     private UnitMover _mover;
 
-    public event Action OnDelivered;
+    public event Action Delivered;
 
     private void Awake()
     {
@@ -39,13 +39,7 @@ public class ResourceCarrier : MonoBehaviour
     private void OnArrivedAtZone()
     {
         _currentResource.transform.SetParent(null);
-
-        float worldRadius = (_deliveryZone.radius - _zoneMargin) * _deliveryZone.transform.localScale.x;
-
-        Vector3 randomCircle = UnityEngine.Random.insideUnitCircle * worldRadius;
-        Vector3 dropPosition = _deliveryZone.transform.position + new Vector3(randomCircle.x, _dropHeight, randomCircle.y);
-
-        _currentResource.transform.position = dropPosition;
+        _currentResource.transform.position = CalculateDropPoint();
 
         if (_currentResource.TryGetComponent<BoxCollider>(out var collision))
         {
@@ -59,7 +53,17 @@ public class ResourceCarrier : MonoBehaviour
             rigidbody.useGravity = true;
         }
 
-        OnDelivered?.Invoke();
+        Delivered?.Invoke();
         _currentResource = null;
+    }
+
+    private Vector3 CalculateDropPoint()
+    {
+        float worldRadius = (_deliveryZone.radius - _zoneMargin) * _deliveryZone.transform.localScale.x;
+
+        Vector3 randomCircle = UnityEngine.Random.insideUnitCircle * worldRadius;
+        Vector3 dropPosition = _deliveryZone.transform.position + new Vector3(randomCircle.x, _dropHeight, randomCircle.y);
+
+        return dropPosition;
     }
 }

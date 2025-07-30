@@ -11,11 +11,11 @@ public class ResourceSpawner : MonoBehaviour
     private Coroutine _spawnCoroutine;
     private Bounds _spawnBounds;
 
-
     private void Awake()
     {
         _spawnBounds = _groundCollider.bounds;
     }
+
     private void OnEnable()
     {
         _spawnCoroutine = StartCoroutine(SpawnLoop());
@@ -41,14 +41,13 @@ public class ResourceSpawner : MonoBehaviour
 
     private void SpawnResource()
     {
-        Resource resource = _resourcePool.Get();
-        resource.Initialize(_resourcePool);
+        Resource newResource = _resourcePool.Get();
 
         float x = Random.Range(_spawnBounds.min.x, _spawnBounds.max.x);
         float z = Random.Range(_spawnBounds.min.z, _spawnBounds.max.z);
         float y = _spawnBounds.max.y + _spawnHeightOffset;
 
-        resource.transform.position = new Vector3(x, y, z);
-        resource.transform.rotation = Quaternion.identity;
+        newResource.transform.position = new Vector3(x, y, z);
+        newResource.transform.rotation = Quaternion.identity;
     }
 }

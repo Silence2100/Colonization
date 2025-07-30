@@ -5,13 +5,13 @@ public class InputHandler : MonoBehaviour
 {
     private const KeyCode ScanKey = KeyCode.S;
 
-    public event Action OnScanRequested;
+    public event Action ScanRequested;
 
     private void Update()
     {
         if (Input.GetKeyDown(ScanKey))
         {
-            OnScanRequested?.Invoke();
+            ScanRequested?.Invoke();
         }
     }
 }

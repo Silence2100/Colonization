@@ -1,19 +1,19 @@
 using UnityEngine;
 using TMPro;
 
-public class ResourceCounterUI : MonoBehaviour
+public class ResourceCounterView : MonoBehaviour
 {
     [SerializeField] private ResourceCounter _resourceCounter;
     [SerializeField] private TextMeshProUGUI _countText;
 
     private void OnEnable()
     {
-        _resourceCounter.OnResourceCountChanged += UpdateText;
+        _resourceCounter.ResourceCountChanged += UpdateText;
     }
 
     private void OnDisable()
     {
-        _resourceCounter.OnResourceCountChanged -= UpdateText;
+        _resourceCounter.ResourceCountChanged -= UpdateText;
     }
 
     private void UpdateText(int newCount)
