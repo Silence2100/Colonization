@@ -4,32 +4,18 @@ using UnityEngine;
 
 public class ResourceRegistry : MonoBehaviour
 {
-    [SerializeField] private ResourceSpawner _resourceSpawner;
-
     private readonly List<Resource> _freeResources = new List<Resource>();
     private readonly List<Resource> _reservedResources = new List<Resource>();
 
-    private void OnEnable()
+    public void RegisterResource(Resource resource)
     {
-        _resourceSpawner.ResourceSpawned += HandleResourceSpawned;
-    }
+        if (_freeResources.Contains(resource) || _reservedResources.Contains(resource))
+        {
+            return;
+        }
 
-    private void OnDisable()
-    {
-        _resourceSpawner.ResourceSpawned -= HandleResourceSpawned;
-    }
-
-    private void HandleResourceSpawned(Resource resource)
-    {
         _freeResources.Add(resource);
         resource.ReturnToPool += HandleResourceReturned;
-    }
-
-    private void HandleResourceReturned(Resource resource)
-    {
-        _freeResources.Remove(resource);
-        _reservedResources.Remove(resource);
-        resource.ReturnToPool -= HandleResourceReturned;
     }
 
     public void ReserveResource(Resource resource)
@@ -48,5 +34,12 @@ public class ResourceRegistry : MonoBehaviour
     public IReadOnlyList<Resource> GetFreeResources()
     {
         return _freeResources.AsReadOnly();
+    }
+
+    private void HandleResourceReturned(Resource resource)
+    {
+        _freeResources.Remove(resource);
+        _reservedResources.Remove(resource);
+        resource.ReturnToPool -= HandleResourceReturned;
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 public class ResourceScanner : MonoBehaviour
 {
     [SerializeField] private ResourceRegistry _resourceRegistry;
-    [SerializeField] private float _scanRadius = 10f;
     [SerializeField] private LayerMask _resourceLayerMask;
+    [SerializeField] private float _scanRadius = 10f;
     [SerializeField] private int _maxResults = 50;
 
     private Collider[] _resultsBuffer;
@@ -30,7 +30,14 @@ public class ResourceScanner : MonoBehaviour
         {
             var resourceComp = _resultsBuffer[i].GetComponent<Resource>();
 
-            if (resourceComp != null && _resourceRegistry.IsResourceFree(resourceComp))
+            if (resourceComp == null)
+            {
+                continue;
+            }
+
+            _resourceRegistry.RegisterResource(resourceComp);
+
+            if (_resourceRegistry.IsResourceFree(resourceComp))
             {
                 found.Add(resourceComp);
             }

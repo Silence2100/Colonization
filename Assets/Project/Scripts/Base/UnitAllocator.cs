@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitAllocator : MonoBehaviour
@@ -19,7 +19,7 @@ public class UnitAllocator : MonoBehaviour
     {
         for (int i = 0; i < _initialUnitCount; i++)
         {
-            Unit unit = _unitSpawner.SpawnOne();
+            Unit unit = _unitSpawner.Spawn();
             unit.ResourceDelivered += HandleUnitDelivered;
 
             _freeUnits.Add(unit);
@@ -35,12 +35,6 @@ public class UnitAllocator : MonoBehaviour
         }
     }
 
-    private void HandleUnitDelivered(Unit unit)
-    {
-        _freeUnits.Add(unit);
-        UnitFreed?.Invoke(unit);
-    }
-
     public void AssignUnits(List<Resource> resources, SphereCollider deliveryZone)
     {
         while (_freeUnits.Count > 0 && resources.Count > 0)
@@ -54,5 +48,11 @@ public class UnitAllocator : MonoBehaviour
             _resourceRegistry.ReserveResource(resource);
             unit.SetTarget(resource, deliveryZone);
         }
+    }
+
+    private void HandleUnitDelivered(Unit unit)
+    {
+        _freeUnits.Add(unit);
+        UnitFreed?.Invoke(unit);
     }
 }

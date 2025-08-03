@@ -22,13 +22,13 @@ public class Unit : MonoBehaviour
         _carrier.Delivered += HandleCarrierDelivered;
     }
 
-    private void HandleCarrierDelivered()
-    {
-        ResourceDelivered?.Invoke(this);
-    }
-
     public void SetTarget(Resource resource, SphereCollider deliveryZone)
     {
         _carrier.CollectAndDeliver(resource, deliveryZone);
+    }
+
+    private void HandleCarrierDelivered()
+    {
+        ResourceDelivered?.Invoke(this);
     }
 }
