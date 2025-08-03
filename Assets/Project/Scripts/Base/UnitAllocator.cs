@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class UnitCoordinator : MonoBehaviour
+public class UnitAllocator : MonoBehaviour
 {
+    [SerializeField] private ResourceRegistry _resourceRegistry;
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private int _initialUnitCount = 3;
 
@@ -12,7 +13,7 @@ public class UnitCoordinator : MonoBehaviour
 
     public event Action<Unit> UnitFreed;
 
-    public IReadOnlyList<Unit> FreeUnits => _freeUnits;
+    public IReadOnlyList<Unit> FreeUnits => _freeUnits.AsReadOnly();
 
     private void Start()
     {
@@ -50,7 +51,7 @@ public class UnitCoordinator : MonoBehaviour
             _freeUnits.RemoveAt(0);
             resources.RemoveAt(0);
 
-            resource.Reserve();
+            _resourceRegistry.ReserveResource(resource);
             unit.SetTarget(resource, deliveryZone);
         }
     }

@@ -12,13 +12,13 @@ public class ResourcePool : MonoBehaviour
     private void Awake()
     {
         _pool = new ObjectPool<Resource>(
-            createFunc:      CreateResourceInstance,
-            actionOnGet:     OnGetResource,
+            createFunc: CreateResourceInstance,
+            actionOnGet: OnGetResource,
             actionOnRelease: OnReleaseResource,
             actionOnDestroy: resource => Destroy(resource.gameObject),
             collectionCheck: true,
             defaultCapacity: _defaultCapacity,
-            maxSize:         _maxSize
+            maxSize: _maxSize
         );
     }
 

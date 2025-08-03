@@ -27,8 +27,6 @@ public class ResourceCarrier : MonoBehaviour
 
     private void OnArrivedAtResource()
     {
-        _currentResource.Collect();
-
         _currentResource.transform.SetParent(transform);
         _currentResource.transform.localPosition = Vector3.up * _carryHeight;
 

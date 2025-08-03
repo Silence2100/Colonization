@@ -6,13 +6,13 @@ public class Base : MonoBehaviour
 
     private InputHandler _input;
     private ResourceScanner _scanner;
-    private UnitCoordinator _unitCoordinator;
+    private UnitAllocator _unitAllocator;
 
     private void Awake()
     {
         _input = GetComponent<InputHandler>();
         _scanner = GetComponent<ResourceScanner>();
-        _unitCoordinator = GetComponent<UnitCoordinator>();
+        _unitAllocator = GetComponent<UnitAllocator>();
     }
 
     private void OnEnable()
@@ -28,6 +28,6 @@ public class Base : MonoBehaviour
     private void HandleScan()
     {
         var found = _scanner.Scan(transform.position);
-        _unitCoordinator.AssignUnits(found, _deliveryZone);
+        _unitAllocator.AssignUnits(found, _deliveryZone);
     }
 }

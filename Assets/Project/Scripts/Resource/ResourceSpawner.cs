@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] private float _spawnInterval = 5f;
     [SerializeField] private float _spawnHeightOffset = 0.1f;
 
+    public event Action<Resource> ResourceSpawned;
+ 
     private Coroutine _spawnCoroutine;
     private Bounds _spawnBounds;
 
@@ -43,11 +46,13 @@ public class ResourceSpawner : MonoBehaviour
     {
         Resource newResource = _resourcePool.Get();
 
-        float x = Random.Range(_spawnBounds.min.x, _spawnBounds.max.x);
-        float z = Random.Range(_spawnBounds.min.z, _spawnBounds.max.z);
+        float x = UnityEngine.Random.Range(_spawnBounds.min.x, _spawnBounds.max.x);
+        float z = UnityEngine.Random.Range(_spawnBounds.min.z, _spawnBounds.max.z);
         float y = _spawnBounds.max.y + _spawnHeightOffset;
 
         newResource.transform.position = new Vector3(x, y, z);
         newResource.transform.rotation = Quaternion.identity;
+
+        ResourceSpawned?.Invoke(newResource);
     }
 }

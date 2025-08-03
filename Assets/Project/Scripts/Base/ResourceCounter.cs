@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ResourceCounter : MonoBehaviour
 {
-    [SerializeField] private UnitCoordinator _unitCoordinator;
+    [SerializeField] private UnitAllocator _unitAllocator;
 
     private int _count = 0;
 
@@ -16,12 +16,12 @@ public class ResourceCounter : MonoBehaviour
 
     private void OnEnable()
     {
-        _unitCoordinator.UnitFreed += HandleUnitDelivered;
+        _unitAllocator.UnitFreed += HandleUnitDelivered;
     }
 
     private void OnDisable()
     {
-        _unitCoordinator.UnitFreed -= HandleUnitDelivered;
+        _unitAllocator.UnitFreed -= HandleUnitDelivered;
     }
 
     private void HandleUnitDelivered(Unit unit)

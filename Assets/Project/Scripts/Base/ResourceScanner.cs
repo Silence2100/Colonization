@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ResourceScanner : MonoBehaviour
 {
+    [SerializeField] private ResourceRegistry _resourceRegistry;
     [SerializeField] private float _scanRadius = 10f;
     [SerializeField] private LayerMask _resourceLayerMask;
     [SerializeField] private int _maxResults = 50;
@@ -29,7 +30,7 @@ public class ResourceScanner : MonoBehaviour
         {
             var resourceComp = _resultsBuffer[i].GetComponent<Resource>();
 
-            if (resourceComp != null && resourceComp.IsCollected == false && resourceComp.IsReserved == false)
+            if (resourceComp != null && _resourceRegistry.IsResourceFree(resourceComp))
             {
                 found.Add(resourceComp);
             }
