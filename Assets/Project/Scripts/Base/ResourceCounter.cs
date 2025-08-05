@@ -7,6 +7,8 @@ public class ResourceCounter : MonoBehaviour
 
     private int _count = 0;
 
+    public int CurrentCount => _count;
+
     public event Action<int> ResourceCountChanged;
 
     private void Start()

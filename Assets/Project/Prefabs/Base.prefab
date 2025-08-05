@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5294497710343318539}
   - component: {fileID: 1144373709845426451}
   - component: {fileID: 6337513951798272989}
+  - component: {fileID: 3644662075435943169}
   - component: {fileID: 2949258645877476979}
   - component: {fileID: 3334438835052727472}
   - component: {fileID: -4711299342241205222}
@@ -73,10 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feab26e266d133e48bc546626a0074eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deliveryZone: {fileID: 3469256231212425128}
-  inputHandler: {fileID: 3334438835052727472}
-  resourceScanner: {fileID: 1144373709845426451}
-  unitAllocator: {fileID: 6337513951798272989}
+  _deliveryZone: {fileID: 3469256231212425128}
 --- !u!114 &4812530328352487219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97871fcb3f7e19343885d8827b3786b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitCoordinator: {fileID: 6337513951798272989}
+  _unitAllocator: {fileID: 6337513951798272989}
 --- !u!114 &1144373709845426451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,12 +114,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: effdaf39c63979a43ac671da1e0806e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanRadius: 10
-  resourceLayerMask:
+  _resourceRegistry: {fileID: 2949258645877476979}
+  _resourceLayerMask:
     serializedVersion: 2
-    m_Bits: 0
-  maxResults: 50
-  resourceRegistry: {fileID: 2949258645877476979}
+    m_Bits: 64
+  _scanRadius: 10
+  _maxResults: 50
 --- !u!114 &6337513951798272989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,9 +132,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32599d944cb1eff4a888d72fc5fb80bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitSpawner: {fileID: 4812530328352487219}
-  initialUnitCount: 3
-  resourceRegistry: {fileID: 2949258645877476979}
+  _resourceRegistry: {fileID: 2949258645877476979}
+  _unitSpawner: {fileID: 4812530328352487219}
+  _basePrefab: {fileID: 8815352081674765687}
+  _initialUnitCount: 3
+  _resourcesNeededToSpawnUnit: 3
+  _resourcesNeededToConstructBase: 5
+  spawnInitialUnits: 0
+--- !u!114 &3644662075435943169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258213440466242517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58e683993e61c8046a703bc01f978ded, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flagPrefab: {fileID: 8179119078418782875, guid: 2148c19407ea4904d98104ce84112416, type: 3}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &2949258645877476979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0665e7862cd8464799781638e3977b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceSpawner: {fileID: 0}
 --- !u!114 &3334438835052727472
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,21 +3,50 @@ using TMPro;
 
 public class ResourceCounterView : MonoBehaviour
 {
-    [SerializeField] private ResourceCounter _resourceCounter;
     [SerializeField] private TextMeshProUGUI _countText;
 
-    private void OnEnable()
+    private ResourceCounter _resourceCounter;
+
+    private void Awake()
     {
-        _resourceCounter.ResourceCountChanged += UpdateText;
+        Base.BaseSelected += HandleBaseSelected;
+
+        if (Base.SelectedBase != null)
+        {
+            HandleBaseSelected(Base.SelectedBase);
+        }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        _resourceCounter.ResourceCountChanged -= UpdateText;
+        Base.BaseSelected -= HandleBaseSelected;
+        Unsubscribe();
     }
 
-    private void UpdateText(int newCount)
+    private void HandleBaseSelected(Base nBase)
     {
-        _countText.text = $"Ресурсы: {newCount}";
+        Unsubscribe();
+
+        _resourceCounter = nBase.GetComponent<ResourceCounter>();
+
+        if (_resourceCounter != null)
+        {
+            _resourceCounter.ResourceCountChanged += UpdateText;
+            UpdateText(_resourceCounter.CurrentCount);
+        }
+    }
+
+    private void Unsubscribe()
+    {
+        if (_resourceCounter != null)
+        {
+            _resourceCounter.ResourceCountChanged -= UpdateText;
+            _resourceCounter = null;
+        }
+    }
+
+    private void UpdateText(int value)
+    {
+        _countText.text = $"Ресурсы: {value}";
     }
 }
