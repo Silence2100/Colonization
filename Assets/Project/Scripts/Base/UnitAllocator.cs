@@ -7,11 +7,16 @@ public class UnitAllocator : MonoBehaviour
     [SerializeField] private ResourceRegistry _resourceRegistry;
     [SerializeField] private UnitSpawner _unitSpawner;
     [SerializeField] private int _initialUnitCount = 3;
+    [SerializeField] private int _resourcesNeededToSpawnUnit = 3;
 
     private readonly List<Unit> _freeUnits = new List<Unit>();
     private readonly List<Unit> _allUnits = new List<Unit>();
+    private readonly List<Resource> _deliveredResources = new List<Resource>();
 
-    public event Action<Unit> UnitFreed;
+    private int _resourcesCollectedSinceLastSpawn = 0;
+
+    public event Action<Unit, Resource> ResourceDelivered;
+    public event Action<int> ResourceSpent;
 
     public IReadOnlyList<Unit> FreeUnits => _freeUnits.AsReadOnly();
 
@@ -19,11 +24,7 @@ public class UnitAllocator : MonoBehaviour
     {
         for (int i = 0; i < _initialUnitCount; i++)
         {
-            Unit unit = _unitSpawner.Spawn();
-            unit.ResourceDelivered += HandleUnitDelivered;
-
-            _freeUnits.Add(unit);
-            _allUnits.Add(unit);
+            SpawnUnit();
         }
     }
 
@@ -31,7 +32,7 @@ public class UnitAllocator : MonoBehaviour
     {
         foreach (Unit unit in _allUnits)
         {
-            unit.ResourceDelivered -= HandleUnitDelivered;
+            unit.ResourceDelivered -= HandleUnitResourceDelivered;
         }
     }
 
@@ -50,9 +51,38 @@ public class UnitAllocator : MonoBehaviour
         }
     }
 
-    private void HandleUnitDelivered(Unit unit)
+    private void HandleUnitResourceDelivered(Unit unit, Resource resource)
     {
+        _deliveredResources.Add(resource);
+
+        ResourceDelivered?.Invoke(unit, resource);
+
+        _resourcesCollectedSinceLastSpawn++;
+
         _freeUnits.Add(unit);
-        UnitFreed?.Invoke(unit);
+
+        if (_deliveredResources.Count >= _resourcesNeededToSpawnUnit)
+        {
+            for (int i = 0; i < _resourcesCollectedSinceLastSpawn; i++)
+            {
+                Resource returnedResource = _deliveredResources[0];
+                _deliveredResources.RemoveAt(0);
+                returnedResource.ReturnPool();
+            }
+
+            ResourceSpent?.Invoke(_resourcesNeededToSpawnUnit);
+
+            SpawnUnit();
+            _resourcesCollectedSinceLastSpawn -= _resourcesNeededToSpawnUnit;
+        }
+    }
+
+    private void SpawnUnit()
+    {
+        Unit unit = _unitSpawner.Spawn();
+        unit.ResourceDelivered += HandleUnitResourceDelivered;
+
+        _freeUnits.Add(unit);
+        _allUnits.Add(unit);
     }
 }

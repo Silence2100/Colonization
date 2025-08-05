@@ -11,7 +11,7 @@ public class ResourceCarrier : MonoBehaviour
     private SphereCollider _deliveryZone;
     private UnitMover _mover;
 
-    public event Action Delivered;
+    public event Action<Resource> Delivered;
 
     private void Awake()
     {
@@ -51,7 +51,7 @@ public class ResourceCarrier : MonoBehaviour
             rigidbody.useGravity = true;
         }
 
-        Delivered?.Invoke();
+        Delivered?.Invoke(_currentResource);
         _currentResource = null;
     }
 

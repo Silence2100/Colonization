@@ -33,6 +33,17 @@ public class ResourcePool : MonoBehaviour
     {
         resourceInstance.Initialize();
         resourceInstance.ReturnToPool += HandleResourceReturnRequested;
+
+        if (resourceInstance.TryGetComponent<Collider>(out var collider))
+        {
+            collider.isTrigger = true;
+        }
+
+        if (resourceInstance.TryGetComponent<Rigidbody>(out var rigidbody))
+        {
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
+        }
     }
 
     private void OnReleaseResource(Resource resourceInstance)

@@ -16,17 +16,25 @@ public class ResourceCounter : MonoBehaviour
 
     private void OnEnable()
     {
-        _unitAllocator.UnitFreed += HandleUnitDelivered;
+        _unitAllocator.ResourceDelivered += HandleResourceDelivered;
+        _unitAllocator.ResourceSpent += HandleResourceSpent;
     }
 
     private void OnDisable()
     {
-        _unitAllocator.UnitFreed -= HandleUnitDelivered;
+        _unitAllocator.ResourceDelivered -= HandleResourceDelivered;
+        _unitAllocator.ResourceSpent -= HandleResourceSpent;
     }
 
-    private void HandleUnitDelivered(Unit unit)
+    private void HandleResourceDelivered(Unit unit, Resource resource)
     {
         _count++;
+        ResourceCountChanged?.Invoke(_count);
+    }
+
+    private void HandleResourceSpent(int spentAmount)
+    {
+        _count -= spentAmount;
         ResourceCountChanged?.Invoke(_count);
     }
 }

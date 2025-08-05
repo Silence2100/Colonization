@@ -5,7 +5,7 @@ public class Unit : MonoBehaviour
 {
     private ResourceCarrier _carrier;
 
-    public event Action<Unit> ResourceDelivered;
+    public event Action<Unit, Resource> ResourceDelivered;
 
     private void Awake()
     {
@@ -27,8 +27,8 @@ public class Unit : MonoBehaviour
         _carrier.CollectAndDeliver(resource, deliveryZone);
     }
 
-    private void HandleCarrierDelivered()
+    private void HandleCarrierDelivered(Resource resource)
     {
-        ResourceDelivered?.Invoke(this);
+        ResourceDelivered?.Invoke(this, resource);
     }
 }
