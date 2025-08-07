@@ -4,50 +4,53 @@ using UnityEngine;
 public class Base : MonoBehaviour
 {
     [SerializeField] private SphereCollider _deliveryZone;
+    [SerializeField] private ResourceScanner _resourceScanner;
+    [SerializeField] private UnitAssignment _unitAssignment;
+    [SerializeField] private UnitSpawnService _unitSpawnService;
+    [SerializeField] private BaseConstructionService _baseConstructionService;
 
-    private InputHandler _input;
-    private ResourceScanner _scanner;
-    private UnitAllocator _unitAllocator;
+    private InputHandler _inputHandler;
     private BaseFlagPlacement _baseFlagPlacement;
 
-    public static Base SelectedBase { get; private set; }
+    private static Base _selectedBase;
+
     public static event Action<Base> BaseSelected;
+
+    public static Base SelectedBase => _selectedBase;
 
     private void Awake()
     {
-        _input = GetComponent<InputHandler>();
-        _scanner = GetComponent<ResourceScanner>();
-        _unitAllocator = GetComponent<UnitAllocator>();
+        _inputHandler = GetComponent<InputHandler>();
         _baseFlagPlacement = GetComponent<BaseFlagPlacement>();
     }
 
     private void OnEnable()
     {
-        _input.ScanRequested += HandleScan;
+        _inputHandler.ScanRequested += HandleScanRequested;
         _baseFlagPlacement.FlagPlaced += HandleFlagPlacement;
     }
 
     private void OnDisable()
     {
-        _input.ScanRequested -= HandleScan;
+        _inputHandler.ScanRequested -= HandleScanRequested;
         _baseFlagPlacement.FlagPlaced -= HandleFlagPlacement;
     }
 
     private void OnMouseDown()
     {
-        SelectedBase = this;
+        _selectedBase = this;
         BaseSelected?.Invoke(this);
     }
 
-    private void HandleScan()
+    private void HandleScanRequested()
     {
         if (SelectedBase != this)
         {
             return;
         }
 
-        var found = _scanner.Scan(transform.position);
-        _unitAllocator.AssignUnits(found, _deliveryZone);
+        var foundResources = _resourceScanner.Scan(transform.position);
+        _unitAssignment.AssignUnits(foundResources, _deliveryZone);
     }
 
     private void HandleFlagPlacement(Vector3 flagPosition)
@@ -57,6 +60,6 @@ public class Base : MonoBehaviour
             return;
         }
 
-        _unitAllocator.SetConstructionTarget(flagPosition);
+        _baseConstructionService.SetConstructionTarget(flagPosition);
     }
 }

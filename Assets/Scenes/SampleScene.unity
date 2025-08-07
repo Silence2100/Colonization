@@ -778,6 +778,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base
       objectReference: {fileID: 0}
+    - target: {fileID: 1871722740382786753, guid: 87f84002dc2f1e0489728256f96777fd, type: 3}
+      propertyPath: _spawnInitialUnitsOnStart
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3334438835052727472, guid: 87f84002dc2f1e0489728256f96777fd, type: 3}
       propertyPath: _flagPlacementLayerMask.m_Bits
       value: 128
