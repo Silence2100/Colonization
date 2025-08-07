@@ -10,7 +10,7 @@ public class Base : MonoBehaviour
     private UnitAllocator _unitAllocator;
     private BaseFlagPlacement _baseFlagPlacement;
 
-    public static Base SelectedBase {  get; private set; }
+    public static Base SelectedBase { get; private set; }
     public static event Action<Base> BaseSelected;
 
     private void Awake()

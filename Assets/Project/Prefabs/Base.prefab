@@ -152,9 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _flagPrefab: {fileID: 8179119078418782875, guid: 2148c19407ea4904d98104ce84112416, type: 3}
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!114 &2949258645877476979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4796b7366a993774f905d8fe4e61720d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _flagPlacementLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!212 &-4711299342241205222
 SpriteRenderer:
   m_ObjectHideFlags: 0
