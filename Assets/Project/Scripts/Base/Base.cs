@@ -12,12 +12,6 @@ public class Base : MonoBehaviour
     private InputHandler _inputHandler;
     private BaseFlagPlacement _baseFlagPlacement;
 
-    private static Base _selectedBase;
-
-    public static event Action<Base> BaseSelected;
-
-    public static Base SelectedBase => _selectedBase;
-
     private void Awake()
     {
         _inputHandler = GetComponent<InputHandler>();
@@ -26,40 +20,24 @@ public class Base : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputHandler.ScanRequested += HandleScanRequested;
-        _baseFlagPlacement.FlagPlaced += HandleFlagPlacement;
+        _inputHandler.ScanRequested += OnScanRequested;
+        _baseFlagPlacement.FlagPlaced += OnFlagPlacement;
     }
 
     private void OnDisable()
     {
-        _inputHandler.ScanRequested -= HandleScanRequested;
-        _baseFlagPlacement.FlagPlaced -= HandleFlagPlacement;
+        _inputHandler.ScanRequested -= OnScanRequested;
+        _baseFlagPlacement.FlagPlaced -= OnFlagPlacement;
     }
 
-    private void OnMouseDown()
+    private void OnScanRequested()
     {
-        _selectedBase = this;
-        BaseSelected?.Invoke(this);
-    }
-
-    private void HandleScanRequested()
-    {
-        if (SelectedBase != this)
-        {
-            return;
-        }
-
         var foundResources = _resourceScanner.Scan(transform.position);
         _unitAssignment.AssignUnits(foundResources, _deliveryZone);
     }
 
-    private void HandleFlagPlacement(Vector3 flagPosition)
+    private void OnFlagPlacement(Vector3 flagPosition)
     {
-        if (SelectedBase != this)
-        {
-            return;
-        }
-
         _baseConstructionService.SetConstructionTarget(flagPosition);
     }
 }

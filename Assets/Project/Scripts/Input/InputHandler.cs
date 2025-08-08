@@ -5,36 +5,37 @@ public class InputHandler : MonoBehaviour
 {
     private const KeyCode ScanKey = KeyCode.S;
 
+    [SerializeField] private BaseSelectionService _baseSelectionService;
     [SerializeField] private LayerMask _flagPlacementLayerMask;
 
-    private Base _baseComponent;
+    private Base _ownBase;
     private BaseFlagPlacement _flagPlacement;
 
     public event Action ScanRequested;
 
     private void Awake()
     {
-        _baseComponent = GetComponent<Base>();
+        _ownBase = GetComponent<Base>();
         _flagPlacement = GetComponent<BaseFlagPlacement>();
     }
 
     private void Update()
     {
         HandleScanInput();
-        HandleFlagPlacementInput();
+        HandleFlagInput();
     }
 
     private void HandleScanInput()
     {
-        if (Input.GetKeyDown(ScanKey) && Base.SelectedBase == _baseComponent)
+        if (Input.GetKeyDown(ScanKey) && _baseSelectionService.SelectedBase == _ownBase)
         {
             ScanRequested?.Invoke();
         }
     }
 
-    private void HandleFlagPlacementInput()
+    private void HandleFlagInput()
     {
-        if (Input.GetMouseButtonDown(1) && Base.SelectedBase == _baseComponent)
+        if (Input.GetMouseButtonDown(1) && _baseSelectionService.SelectedBase == _ownBase)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -43,5 +44,10 @@ public class InputHandler : MonoBehaviour
                 _flagPlacement.PlaceOrMoveFlag(hit.point);
             }
         }
+    }
+
+    private void OnMouseDown()
+    {
+        _baseSelectionService.SelectBase(_ownBase);
     }
 }

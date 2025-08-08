@@ -18,6 +18,7 @@ public class BaseFlagPlacement : MonoBehaviour
         else
         {
             _currentFlag.transform.position = target;
+            _currentFlag.gameObject.SetActive(true);
         }
 
         FlagPlaced?.Invoke(target);
@@ -27,8 +28,7 @@ public class BaseFlagPlacement : MonoBehaviour
     {
         if (_currentFlag != null)
         {
-            Destroy(_currentFlag.gameObject);
-            _currentFlag = null;
+            _currentFlag.gameObject?.SetActive(false);
         }
     }
 }

@@ -209,6 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4796b7366a993774f905d8fe4e61720d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseSelectionService: {fileID: 0}
   _flagPlacementLayerMask:
     serializedVersion: 2
     m_Bits: 128

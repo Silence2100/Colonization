@@ -4,30 +4,31 @@ using TMPro;
 public class ResourceCounterView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _countText;
+    [SerializeField] private BaseSelectionService _baseSelectionService;
 
     private ResourceCounter _resourceCounter;
 
     private void Awake()
     {
-        Base.BaseSelected += HandleBaseSelected;
+        _baseSelectionService.BaseSelected += OnBaseSelected;
 
-        if (Base.SelectedBase != null)
+        if (_baseSelectionService.SelectedBase != null)
         {
-            HandleBaseSelected(Base.SelectedBase);
+            OnBaseSelected(_baseSelectionService.SelectedBase);
         }
     }
 
     private void OnDestroy()
     {
-        Base.BaseSelected -= HandleBaseSelected;
-        Unsubscribe();
+        _baseSelectionService.BaseSelected -= OnBaseSelected;
+        UnsubscribeFromCounter();
     }
 
-    private void HandleBaseSelected(Base nBase)
+    private void OnBaseSelected(Base selectedBase)
     {
-        Unsubscribe();
+        UnsubscribeFromCounter();
 
-        _resourceCounter = nBase.GetComponent<ResourceCounter>();
+        _resourceCounter = selectedBase.GetComponent<ResourceCounter>();
 
         if (_resourceCounter != null)
         {
@@ -36,7 +37,7 @@ public class ResourceCounterView : MonoBehaviour
         }
     }
 
-    private void Unsubscribe()
+    private void UnsubscribeFromCounter()
     {
         if (_resourceCounter != null)
         {
