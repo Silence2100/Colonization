@@ -8,29 +8,29 @@ public class Base : MonoBehaviour
     [SerializeField] private UnitAssignment _unitAssignment;
     [SerializeField] private UnitSpawnService _unitSpawnService;
     [SerializeField] private BaseConstructionService _baseConstructionService;
+    [SerializeField] private BaseFlagPlacement _baseFlagPlacement;
 
-    private InputHandler _inputHandler;
-    private BaseFlagPlacement _baseFlagPlacement;
+    private int _resourceCount = 0;
 
-    private void Awake()
-    {
-        _inputHandler = GetComponent<InputHandler>();
-        _baseFlagPlacement = GetComponent<BaseFlagPlacement>();
-    }
+    public int CurrentResourceCount => _resourceCount;
+
+    public event Action<int> ResourceCountChanged; 
 
     private void OnEnable()
     {
-        _inputHandler.ScanRequested += OnScanRequested;
         _baseFlagPlacement.FlagPlaced += OnFlagPlacement;
+        _unitAssignment.ResourceDelivered += OnUnitDelivered;
+        _unitAssignment.ResourcesSpent += OnResourceSpent;
     }
 
     private void OnDisable()
     {
-        _inputHandler.ScanRequested -= OnScanRequested;
         _baseFlagPlacement.FlagPlaced -= OnFlagPlacement;
+        _unitAssignment.ResourceDelivered -= OnUnitDelivered;
+        _unitAssignment.ResourcesSpent -= OnResourceSpent;
     }
 
-    private void OnScanRequested()
+    public void Scan()
     {
         var foundResources = _resourceScanner.Scan(transform.position);
         _unitAssignment.AssignUnits(foundResources, _deliveryZone);
@@ -39,5 +39,20 @@ public class Base : MonoBehaviour
     private void OnFlagPlacement(Vector3 flagPosition)
     {
         _baseConstructionService.SetConstructionTarget(flagPosition);
+    }
+
+    private void OnUnitDelivered(Unit unit, Resource resource)
+    {
+        _resourceCount++;
+        ResourceCountChanged?.Invoke(_resourceCount);
+
+        _unitSpawnService.OnResourceDelivered(_resourceCount);
+        _baseConstructionService.OnResourceDelivered(_resourceCount);
+    }
+
+    private void OnResourceSpent(int amount)
+    {
+        _resourceCount -= amount;
+        ResourceCountChanged?.Invoke(_resourceCount);
     }
 }

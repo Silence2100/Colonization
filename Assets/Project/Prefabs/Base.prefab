@@ -15,13 +15,11 @@ GameObject:
   - component: {fileID: 4128416079445061196}
   - component: {fileID: 1871722740382786753}
   - component: {fileID: 4812530328352487219}
-  - component: {fileID: 5294497710343318539}
   - component: {fileID: 1144373709845426451}
   - component: {fileID: 3644662075435943169}
   - component: {fileID: 2949258645877476979}
-  - component: {fileID: 3334438835052727472}
   - component: {fileID: -4711299342241205222}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,6 +79,7 @@ MonoBehaviour:
   _unitAssignment: {fileID: 4128416079445061196}
   _unitSpawnService: {fileID: 1871722740382786753}
   _baseConstructionService: {fileID: 8327990906783792613}
+  _baseFlagPlacement: {fileID: 3644662075435943169}
 --- !u!114 &8327990906783792613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,9 +123,7 @@ MonoBehaviour:
   _unitAssignment: {fileID: 4128416079445061196}
   _unitSpawner: {fileID: 4812530328352487219}
   _baseConstructionService: {fileID: 8327990906783792613}
-  _initialUnitCount: 3
   _resourcesNeededForSpawn: 3
-  _spawnInitialUnitsOnStart: 1
 --- !u!114 &4812530328352487219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,19 +138,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _unitPrefab: {fileID: 8450980965640893530, guid: b8e6ea317c4310448aa172b3b3c36896, type: 3}
   _spawnRadius: 1
---- !u!114 &5294497710343318539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258213440466242517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97871fcb3f7e19343885d8827b3786b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _unitAssignment: {fileID: 4128416079445061196}
 --- !u!114 &1144373709845426451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,22 +181,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0665e7862cd8464799781638e3977b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3334438835052727472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258213440466242517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4796b7366a993774f905d8fe4e61720d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _baseSelectionService: {fileID: 0}
-  _flagPlacementLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!212 &-4711299342241205222
 SpriteRenderer:
   m_ObjectHideFlags: 0

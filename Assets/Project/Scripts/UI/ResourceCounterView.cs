@@ -6,7 +6,7 @@ public class ResourceCounterView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _countText;
     [SerializeField] private BaseSelectionService _baseSelectionService;
 
-    private ResourceCounter _resourceCounter;
+    private Base _currentBase;
 
     private void Awake()
     {
@@ -20,29 +20,29 @@ public class ResourceCounterView : MonoBehaviour
 
     private void OnDestroy()
     {
-        _baseSelectionService.BaseSelected -= OnBaseSelected;
         UnsubscribeFromCounter();
+        _baseSelectionService.BaseSelected -= OnBaseSelected;
     }
 
     private void OnBaseSelected(Base selectedBase)
     {
         UnsubscribeFromCounter();
 
-        _resourceCounter = selectedBase.GetComponent<ResourceCounter>();
+        _currentBase = selectedBase;
 
-        if (_resourceCounter != null)
+        if (_currentBase != null)
         {
-            _resourceCounter.ResourceCountChanged += UpdateText;
-            UpdateText(_resourceCounter.CurrentCount);
+            _currentBase.ResourceCountChanged += UpdateText;
+            UpdateText(_currentBase.CurrentResourceCount);
         }
     }
 
     private void UnsubscribeFromCounter()
     {
-        if (_resourceCounter != null)
+        if (_currentBase != null)
         {
-            _resourceCounter.ResourceCountChanged -= UpdateText;
-            _resourceCounter = null;
+            _currentBase.ResourceCountChanged -= UpdateText;
+            _currentBase = null;
         }
     }
 

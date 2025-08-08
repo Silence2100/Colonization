@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
@@ -6,48 +5,84 @@ public class InputHandler : MonoBehaviour
     private const KeyCode ScanKey = KeyCode.S;
 
     [SerializeField] private BaseSelectionService _baseSelectionService;
+    [SerializeField] private Camera _mainCamera;
+    [SerializeField] private LayerMask _baseLayerMask;
     [SerializeField] private LayerMask _flagPlacementLayerMask;
 
-    private Base _ownBase;
-    private BaseFlagPlacement _flagPlacement;
-
-    public event Action ScanRequested;
+    private Base _selectedBase;
+    private BaseFlagPlacement _flagPlacementComponent;
 
     private void Awake()
     {
-        _ownBase = GetComponent<Base>();
-        _flagPlacement = GetComponent<BaseFlagPlacement>();
+        _baseSelectionService.BaseSelected += OnBaseSelected;
+
+        if (_baseSelectionService.SelectedBase != null)
+        {
+            OnBaseSelected(_baseSelectionService.SelectedBase);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        _baseSelectionService.BaseSelected -= OnBaseSelected;
     }
 
     private void Update()
     {
-        HandleScanInput();
-        HandleFlagInput();
+        HandleSelection();
+        HandleScan();
+        HandleFlagPlacement();
     }
 
-    private void HandleScanInput()
+    private void OnBaseSelected(Base nextBase)
     {
-        if (Input.GetKeyDown(ScanKey) && _baseSelectionService.SelectedBase == _ownBase)
+        _selectedBase = nextBase;
+        _flagPlacementComponent = nextBase != null ? nextBase.GetComponent<BaseFlagPlacement>() : null;
+    }
+
+    private void HandleSelection()
+    {
+        if (Input.GetMouseButtonDown(0) == false)
         {
-            ScanRequested?.Invoke();
+            return;
         }
-    }
 
-    private void HandleFlagInput()
-    {
-        if (Input.GetMouseButtonDown(1) && _baseSelectionService.SelectedBase == _ownBase)
+        if (TryRaycast(_baseLayerMask, out var hit))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Base baseUnderCursor = hit.collider.GetComponentInParent<Base>();
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _flagPlacementLayerMask))
+            if (baseUnderCursor != null)
             {
-                _flagPlacement.PlaceOrMoveFlag(hit.point);
+                _baseSelectionService.SelectBase(baseUnderCursor);
             }
         }
     }
 
-    private void OnMouseDown()
+    private void HandleScan()
     {
-        _baseSelectionService.SelectBase(_ownBase);
+        if (Input.GetKeyDown(ScanKey) && _selectedBase != null)
+        {
+            _selectedBase.Scan();
+        }
+    }
+
+    private void HandleFlagPlacement()
+    {
+        if (Input.GetMouseButtonDown(1) == false || _flagPlacementComponent == null)
+        {
+            return;
+        }
+
+        if (TryRaycast(_flagPlacementLayerMask, out var hit))
+        {
+            _flagPlacementComponent.PlaceOrMoveFlag(hit.point);
+        }
+    }
+
+    private bool TryRaycast(LayerMask mask, out RaycastHit hit)
+    {
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        return Physics.Raycast(ray, out hit, Mathf.Infinity, mask);
     }
 }

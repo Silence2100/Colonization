@@ -8,7 +8,7 @@ public class BaseConstructionService : MonoBehaviour
 
     private BaseFlagPlacement _flagPlacement;
     private Vector3? _constructionTarget;
-    private int _accumulatedForConstruction = 0;
+    private int _resourcesAtFlagPlacement;
 
     public bool HasConstructionTarget() => _constructionTarget.HasValue;
 
@@ -17,48 +17,27 @@ public class BaseConstructionService : MonoBehaviour
         _flagPlacement = GetComponent<BaseFlagPlacement>();
     }
 
-    private void OnEnable()
-    {
-        _unitAssignment.ResourceDelivered += HandleResourceDelivered;
-    }
-
-    private void OnDisable()
-    {
-        _unitAssignment.ResourceDelivered -= HandleResourceDelivered;
-    }
-
     public void SetConstructionTarget(Vector3 targetPosition)
     {
         _constructionTarget = targetPosition;
-        _accumulatedForConstruction = _unitAssignment.CurrentDeliveredCount();
     }
 
-    private void HandleResourceDelivered(Unit unit, Resource resource)
+    public void OnResourceDelivered(int currentResourceCount)
     {
-        if (_constructionTarget.HasValue)
-        {
-            _accumulatedForConstruction++;
-            TryStartConstruction();
-        }
-    }
-
-    private void TryStartConstruction()
-    {
-        if (_constructionTarget.HasValue == false || _unitAssignment.FreeUnits.Count <= 0 || _accumulatedForConstruction < _resourcesNeededForConstruction)
+        if (_constructionTarget.HasValue == false || currentResourceCount < _resourcesNeededForConstruction || _unitAssignment.FreeUnits.Count == 0)
         {
             return;
         }
 
         _unitAssignment.SpendResources(_resourcesNeededForConstruction);
 
-        var builder = _unitAssignment.FreeUnits[0];
+        Unit builder = _unitAssignment.FreeUnits[0];
         _unitAssignment.UnregisterUnit(builder);
 
-        var buildPosition = _constructionTarget.Value;
-        builder.GetComponent<UnitMover>().MoveTo(buildPosition, () => OnBuilderArrived(builder, buildPosition));
+        Vector3 buildPosition = _constructionTarget.Value;
+        builder.MoveToPosition(buildPosition, () => OnBuilderArrived(builder, buildPosition));
 
         _constructionTarget = null;
-        _accumulatedForConstruction = 0;
     }
 
     private void OnBuilderArrived(Unit builder, Vector3 buildPosition)
@@ -66,9 +45,6 @@ public class BaseConstructionService : MonoBehaviour
         _flagPlacement.ClearFlag();
 
         Base nextBase = Instantiate(_basePrefab, buildPosition, Quaternion.Euler(90f, 0f, 0f));
-
-        UnitSpawnService spawnService = nextBase.GetComponent<UnitSpawnService>();
-        spawnService.DisableInitialSpawn();
 
         UnitAssignment assignment = nextBase.GetComponent<UnitAssignment>();
         assignment.RegisterUnit(builder);
